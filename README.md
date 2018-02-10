@@ -1,5 +1,6 @@
 # MSR
 Multi-Segment Reconstruction Using Invariant Features
+-------------------------------------------------------
 
 MATLAB implementations for the following paper,
 
@@ -10,12 +11,13 @@ by,
 Mona Zehni, Minh N. Do, Zhizhen Zhao
 
 The latest version of the paper submitted to ArXiv,
+
 Paper: 
 
 Code:
--------------------------------------------------------
-User Manual:
 
+User Manual:
+-------------------------------------------------------
 - Run RunMe.m to add the paths of all folders
 - Run example.m for a quick example
 - All functions are included in the "functions" folder
