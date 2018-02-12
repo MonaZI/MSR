@@ -9,6 +9,8 @@ function [p_true, X] = sig_shifter(d, n, x_true, pmf_type)
 %       p_true: the true distribution of the shifts
 %       X: the clean shifted observations of the signal
 
+assert((strcmp(pmf_type,'nonuniform')) | (strcmp(pmf_type,'uniform')), ...
+    'Wrong pmf type! The choices for pmf_type are 1) uniform, 2) nonuniform')
 
 if strcmp(pmf_type,'uniform')
     p_true = ones(d,1);

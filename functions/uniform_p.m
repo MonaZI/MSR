@@ -1,30 +1,36 @@
-function [ x_est, fval, time ] = uniform_p(d, mu_est, C_est, T_est, lambda_mu, lambda_C, lambda_T)
-%Estimating the signal x and shift's pmf p from invariants mu, C, T when 
+function [ x_est, fval, time ] = uniform_p(d, mu_est, C_est, T_est, lambda)
+%Estimating the signal x and shift's pmf p from invariants mu, C, T when
 %p is a uniform distribution
-%input: 
+%input:
 %       d: signal length
 %       mu_est: estimated mean
 %       C_est: estimated 2nd order correlation
 %       T_est: estimated 3rd oredr correlation (bispectrum)
-%       lambda_mu: the weight corresponding to the mean term
-%       lambda_C: the weight corresponding to the 2nd order moment term
-%       lambda_T: the weight corresponding to the 3rd order moment term
-%output: 
+%       lambda: the vector of weights corresponding to each term in the
+%       objective
+%output:
 %       x_est: estimated signal
 %       fval: value of the objective function at the final point
+%       time: amount of required time for the computations
+
+if ~exist('lambda','var') || isempty(lambda)
+    lambda = ones(3,1);
+end
+
+lambda_mu = lambda(1);
+lambda_C = lambda(2);
+lambda_T = lambda(3);
 
 % Initialization
 xinit = rand(d, 1);
-z0 = [xinit];
+z0 = xinit;
 
 % Defining the optimization problem
-A = -eye(d);
-b = zeros(d, 1);
 F = @(z)objfun_unif(z, mu_est, C_est, T_est, lambda_mu, lambda_C, lambda_T);
 % options = optimoptions('fmincon', 'Display','off','Algorithm','sqp', 'SpecifyObjectiveGradient',true, 'FunctionTolerance', 1e-16, 'StepTolerance', 1e-15, 'MaxIterations', 4000, 'CheckGradient', false);
 options = optimoptions('fmincon', 'Display','off','Algorithm','sqp', 'GradObj','on', 'TolFun', 1e-16, 'MaxIter', 4000, 'MaxFunEvals', 10000, 'DerivativeCheck', 'off');
 tic
-[z, fval] = fmincon(F, z0, A, b, [], [], [], [], [], options);
+[z, fval] = fmincon(F, z0, [], [], [], [], [], [], [], options);
 time = toc;
 
 x_est = z(1:d);
@@ -63,16 +69,16 @@ for i = 1:m
         Ttmp = T0(i,j) - T(i,j);
         
         G3 = G3 - 2/d*(circshift(f, -(j-1)) .* circshift(f, -(i-1))+...
-        circshift(f, (j-1)) .* circshift(f, j-i)+...
-        circshift(f, (i-1)) .* circshift(f, i-j))*Ttmp;
+            circshift(f, (j-1)) .* circshift(f, j-i)+...
+            circshift(f, (i-1)) .* circshift(f, i-j))*Ttmp;
         
     end
     
 end
 
 cost = lambda_T * norm(T0(:) - T(:), 'fro')^2 + ...
-       lambda_C * norm(C0 - C, 'fro')^2 + ...
-       lambda_mu * norm(mu - mu0, 'fro').^2;
+    lambda_C * norm(C0 - C, 'fro')^2 + ...
+    lambda_mu * norm(mu - mu0, 'fro').^2;
 Gx = lambda_T * G3 + lambda_C * G2 + lambda_mu * G1;
 
 G = [Gx];

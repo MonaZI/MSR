@@ -1,4 +1,4 @@
-function [x,p,time_cost] = EM_solver(obs,d,sigma,tol,max_iter,x,p)
+function [x,p,time_cost] = EM_solver(obs,d,sigma,tol,max_iter)
 % Solving the maximum likelihood estimation of the signal and the pmf of
 % the shifts using EM
 %input:
@@ -7,18 +7,24 @@ function [x,p,time_cost] = EM_solver(obs,d,sigma,tol,max_iter,x,p)
 %   sigma: noise level
 %   tol: distance tolerance (specifies the convergnece tol of EM)
 %   max_iter: the maximum number of iterations for EM
-%   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!x,p
 %output:
 %   x: estimated signal
 %   p: estimated shift pmf
 %   time_cost: EM computation time
 
+if ~exist('max_iter','var') || isempty(max_iter)
+    max_iter = 5e5;
+    if ~exist('tol','var') || isempty(tol)
+        tol = 1e-5;
+    end
+end
+
 [m,n] = size(obs);
 
-% initializing x and p
-% x = rand(d,1);
-% p = rand(d,1);
-% p = p/sum(p);
+% initializing x and p randomly
+x = rand(d,1);
+p = rand(d,1);
+p = p/sum(p);
 
 not_conv = 1;
 iter = 1;

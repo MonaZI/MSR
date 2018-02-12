@@ -1,4 +1,5 @@
-function [ rec_sig, p_est, fval ] = nonuniform_p(d, mu_est, C_est, T_est, lambda_mu, lambda_C, lambda_T)
+function [ rec_sig, p_est, fval, time ] = nonuniform_p ...
+    (d, mu_est, C_est, T_est, lambda, mode, c)
 %Estimating the signal x and shift's pmf p from invariants mu, C, T when 
 %p is a non-uniform distribution
 %input: 
@@ -6,14 +7,32 @@ function [ rec_sig, p_est, fval ] = nonuniform_p(d, mu_est, C_est, T_est, lambda
 %       mu_est: estimated mean
 %       C_est: estimated 2nd order correlation
 %       T_est: estimated 3rd oredr correlation (bispectrum)
-%       lambda_mu: the weight corresponding to the mean term
-%       lambda_C: the weight corresponding to the 2nd order moment term
-%       lambda_T: the weight corresponding to the 3rd order moment term
+%       lambda: the vector of weights corresponding to each term in the
+%       objective
+%       mode: the way the signal is generated, 'random' or 'discrete' in
+%       value
+%       c: levels of quantization (in case of discrete-valued signal)
 %output: 
 %       rec_sig: estimated signal
-%       est_p: estimated shifts pmf
-%       p: true distribution
+%       p_est: estimated shifts pmf
 %       fval: value of the objective function at the final point
+%       time: amount of required time for the computations
+
+if ~exist('mode','var') || isempty(mode)
+    mode = 'random';
+    if ~exist('lambda','var') || isempty(lambda)
+        lambda = ones(3,1);
+    end
+end
+
+assert(strcmp(mode,'random') || strcmp(mode,'discrete'), ...
+    'Wrong mode, options are random or discrete.')
+assert(exist('c','var') && strcmp(mode,'discrete') || strcmp(mode,'random'), ...
+    'No number of quantization levels defined.')
+
+lambda_mu = lambda(1);
+lambda_C = lambda(2);
+lambda_T = lambda(3);
 
 % Initialization
 xinit = rand(d, 1);
@@ -22,13 +41,21 @@ p0 = p0/sum(p0);
 z0 = [xinit; p0(2:end)];
 
 % Defining the optimization problem
-A = -eye(2*d-1);
-A = [A; [ zeros(1, d), ones(1, d-1)]];
-b = [zeros(2*d-1, 1); 1];
+% constraints on p
+A = [zeros(d-1,d),-eye(d-1);[ zeros(1, d), ones(1, d-1)]];
+b = [zeros(d-1, 1); 1];
+if strcmp(mode,'discrete')
+    % constraints on x
+    A = [A;[eye(d),zeros(d,d-1)]];
+    b = [b;c*ones(d,1)];
+end
+    
 F = @(z)objfun(z, mu_est, C_est, T_est, lambda_mu, lambda_C, lambda_T);
 % options = optimoptions('fmincon', 'Display','off','Algorithm','sqp', 'SpecifyObjectiveGradient',true, 'FunctionTolerance', 1e-16, 'StepTolerance', 1e-15, 'MaxIterations', 4000, 'CheckGradient', false);
 options = optimoptions('fmincon', 'Display','off','Algorithm','sqp', 'GradObj','on', 'TolFun', 1e-16, 'MaxIter', 4000, 'MaxFunEvals', 10000, 'DerivativeCheck', 'off');
+tic
 [z, fval] = fmincon(F, z0, A, b, [], [], [], [], [], options);
+time = toc;
 
 p_est = z(d+1:end);
 p_est = [1-sum(p_est); p_est];

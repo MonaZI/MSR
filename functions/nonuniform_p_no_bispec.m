@@ -1,17 +1,25 @@
-function [ rec_sig, p_est, fval ] = nonuniform_p_no_bispec(d, mu_est, C_est, lambda_mu, lambda_C)
+function [ rec_sig, p_est, fval, time ] = nonuniform_p_no_bispec(d, mu_est, C_est, lambda)
 %Estimating the signal x and shift's pmf p from invariants mu, C, T when 
 %p is a non-uniform distribution
 %input: 
 %       d: signal length
 %       mu_est: estimated mean
 %       C_est: estimated 2nd order correlation
-%       lambda_mu: the weight corresponding to the mean term
-%       lambda_C: the weight corresponding to the 2nd order moment term
-%output: 
+%       lambda: the vector of weights corresponding to each term in the
+%       objective
+%output:
 %       rec_sig: estimated signal
 %       est_p: estimated shifts pmf
 %       p: true distribution
 %       fval: value of the objective function at the final point
+%       time: time (s) that takes for the optimization to finish
+
+if ~exist('lambda','var') || isempty(lambda)
+    lambda = ones(2,1);
+end
+
+lambda_mu = lambda(1);
+lambda_C = lambda(2);
 
 % Initialization
 xinit = rand(d, 1);
@@ -20,13 +28,15 @@ p0 = p0/sum(p0);
 z0 = [xinit; p0(2:end)];
 
 % Defining the optimization problem
-A = -eye(2*d-1);
-A = [A; [ zeros(1, d), ones(1, d-1)]];
-b = [zeros(2*d-1, 1); 1];
+% constraints on p
+A = [zeros(d-1,d),-eye(d-1);[ zeros(1, d), ones(1, d-1)]];
+b = [zeros(d-1, 1); 1];
 F = @(z)objfun(z, mu_est, C_est, lambda_mu, lambda_C);
 % options = optimoptions('fmincon', 'Display','off','Algorithm','sqp', 'SpecifyObjectiveGradient',true, 'FunctionTolerance', 1e-16, 'StepTolerance', 1e-15, 'MaxIterations', 4000, 'CheckGradient', false);
-options = optimoptions('fmincon', 'Display','iter','Algorithm','sqp', 'GradObj','on', 'TolFun', 1e-16, 'MaxIter', 4000, 'MaxFunEvals', 10000, 'DerivativeCheck', 'off');
+options = optimoptions('fmincon', 'Display','off','Algorithm','sqp', 'GradObj','on', 'TolFun', 1e-16, 'MaxIter', 4000, 'MaxFunEvals', 10000, 'DerivativeCheck', 'off');
+tic
 [z, fval] = fmincon(F, z0, A, b, [], [], [], [], [], options);
+time = toc;
 
 p_est = z(d+1:end);
 p_est = [1-sum(p_est); p_est];
