@@ -27,7 +27,7 @@ end
 
 assert(strcmp(mode,'random') || strcmp(mode,'discrete'), ...
     'Wrong mode, options are random or discrete.')
-assert(exist('c','var') && strcmp(mode,'discrete') || strcmp(mode,'random'), ...
+assert((exist('c','var') && strcmp(mode,'discrete')) || strcmp(mode,'random'), ...
     'No number of quantization levels defined.')
 
 lambda_mu = lambda(1);
@@ -52,7 +52,7 @@ end
     
 F = @(z)objfun(z, mu_est, C_est, T_est, lambda_mu, lambda_C, lambda_T);
 % options = optimoptions('fmincon', 'Display','off','Algorithm','sqp', 'SpecifyObjectiveGradient',true, 'FunctionTolerance', 1e-16, 'StepTolerance', 1e-15, 'MaxIterations', 4000, 'CheckGradient', false);
-options = optimoptions('fmincon', 'Display','off','Algorithm','sqp', 'GradObj','on', 'TolFun', 1e-16, 'MaxIter', 4000, 'MaxFunEvals', 10000, 'DerivativeCheck', 'off');
+options = optimoptions('fmincon', 'Display','iter','Algorithm','sqp', 'GradObj','on', 'TolFun', 1e-16, 'MaxIter', 4000, 'MaxFunEvals', 10000, 'DerivativeCheck', 'off');
 tic
 [z, fval] = fmincon(F, z0, A, b, [], [], [], [], [], options);
 time = toc;

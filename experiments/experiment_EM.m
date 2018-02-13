@@ -1,16 +1,12 @@
 % jobscript comparing our alg with covariance with EM
-
 clear all
 close all
 clc
 
-% delete(gcp('nocreate'))
-% parpool('local',4);
-
 % list of parameters
 % signal and observations
 d = 11;
-m = 11;
+m = 7;
 n = 1e5;
 sigma = 10.^[-0.3:0.05:log10(2)];
 pmf_type = 'nonuniform';
@@ -49,6 +45,10 @@ fval_EM = zeros(length(sigma),num_repeats);
 x_true = rand(d,1);
 [p_true, X] = sig_shifter(d, n, x_true, pmf_type);
 X = X(1:m,:);
+
+if isempty(gcp('nocreate'))
+    parpool('local',4);
+end
 
 for sigma_ind = 1:length(sigma)
     fprintf(['\nsigma = ',num2str(sigma(sigma_ind)),'\n'])

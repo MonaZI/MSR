@@ -25,6 +25,11 @@ p_th = zeros(length(d),max(d));
 MSE_x = zeros(length(d), max(d), num_repeats);
 MSE_p = zeros(length(d), max(d), num_repeats);
 fval = zeros(length(d), max(d), num_repeats);
+
+if isempty(gcp('nocreate'))
+    parpool('local',4);
+end
+
 for i = 1:length(d)
     % generating a signal of length d
     x_true = rand(d,1);

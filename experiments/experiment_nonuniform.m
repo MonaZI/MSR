@@ -2,9 +2,6 @@ clear all
 close all
 clc
 
-% delete(gcp('nocreate'))
-% parpool('local',16);
-
 % list of parameters
 % signal and observations
 d = 21;sort([[11:10:101],[15:10:95]],'ascend');
@@ -27,6 +24,11 @@ p_th = zeros(length(d),max(d));
 MSE_x = zeros(length(d), max(d), num_repeats);
 MSE_p = zeros(length(d), max(d), num_repeats);
 fval = zeros(length(d), max(d), num_repeats);
+
+if isempty(gcp('nocreate'))
+    parpool('local',4);
+end
+
 for i = 1:length(d)
     % generating a signal of length d
     x_true = rand(d,1);
@@ -45,7 +47,6 @@ for i = 1:length(d)
         for iter = 1:num_repeats 
             [ x_est, p_est, fval_epoch(iter), ~ ] = ...
                 nonuniform_p(d, mu_est, C_est, T_est, lambda, mode);
-
             x_align = align_to_ref(x_est, x_true);
             p_align = align_to_ref(p_est, p_true);
             mse_x_epoch(iter) = (norm(x_align-x_true,'fro'))^2;

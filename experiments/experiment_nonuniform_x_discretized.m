@@ -29,6 +29,11 @@ p_th = zeros(length(d),max(d));
 MSE_x = zeros(length(d), max(d), num_repeats);
 MSE_p = zeros(length(d), max(d), num_repeats);
 fval = zeros(length(d), max(d), num_repeats);
+
+if isempty(gcp('nocreate'))
+    parpool('local',4);
+end
+
 for i = 1:length(d)
     % generating a signal of length d with discretized values in [0:c-1]
     % interval
@@ -37,7 +42,7 @@ for i = 1:length(d)
     % generating the shifts based on the distribution
     [p_true, X] = sig_shifter(d, n, x_true, pmf_type);
     
-    for m = 3:1:d(i)
+    for m = 7:1:d(i)
         [mu_est, C_est, T_est] = generate_invariants(X, m, sigma, T_gen);
         
         mse_x_epoch = zeros(num_repeats,1);

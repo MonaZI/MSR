@@ -2,9 +2,6 @@ clear all
 close all
 clc
 
-% delete(gcp('nocreate'))
-% parpool('local',16);
-
 % list of parameters
 % signal and observations
 d = 11;sort([[11:10:101],[15:10:95]],'ascend');
@@ -16,6 +13,7 @@ pmf_type = 'uniform';
 lambda_mu = 1;
 lambda_C = 1;
 lambda_T = 1;
+lamda = [lambda_mu, lambda_C, lambda_T];
 T_gen = 1;
 
 th = 1e-3;
@@ -24,6 +22,11 @@ num_repeats = 50;
 p_th = zeros(length(d),max(d));
 MSE_x = zeros(length(d), max(d), num_repeats);
 fval = zeros(length(d), max(d), num_repeats);
+
+if isempty(gcp('nocreate'))
+    parpool('local',4);
+end
+
 for i = 1:length(d)
     % generating a signal of length d(i)
     x_true = rand(d(i),1);
@@ -38,8 +41,8 @@ for i = 1:length(d)
         fval_epoch = zeros(num_repeats,1);
         
         % use parfor to run the iterations in parallel
-        for iter = 1:num_repeats 
-            [ x_est, fval_epoch(iter), ~ ] = ... 
+        for iter = 1:num_repeats
+            [ x_est, fval_epoch(iter), ~ ] = ...
                 uniform_p(d(i), mu_est, C_est, T_est);
             x_align = align_to_ref(x_est, x_true);
             mse_x_epoch(iter) = (norm(x_align-x_true,'fro'))^2;
