@@ -13,6 +13,13 @@ function [ rec_sig, p_est, fval, time ] = nonuniform_p_no_bispec(d, mu_est, C_es
 %       p: true distribution
 %       fval: value of the objective function at the final point
 %       time: time (s) that takes for the optimization to finish
+%
+% ! Note that based on the MATLAB version, the options set in the 
+% "optimoptions" might have different names. We used MATLAB R2015b.
+%
+%February 2018
+%paper: 
+%code
 
 if ~exist('lambda','var') || isempty(lambda)
     lambda = ones(2,1);
@@ -32,8 +39,9 @@ z0 = [xinit; p0(2:end)];
 A = [zeros(d-1,d),-eye(d-1);[ zeros(1, d), ones(1, d-1)]];
 b = [zeros(d-1, 1); 1];
 F = @(z)objfun(z, mu_est, C_est, lambda_mu, lambda_C);
-% options = optimoptions('fmincon', 'Display','off','Algorithm','sqp', 'SpecifyObjectiveGradient',true, 'FunctionTolerance', 1e-16, 'StepTolerance', 1e-15, 'MaxIterations', 4000, 'CheckGradient', false);
-options = optimoptions('fmincon', 'Display','off','Algorithm','sqp', 'GradObj','on', 'TolFun', 1e-16, 'MaxIter', 4000, 'MaxFunEvals', 10000, 'DerivativeCheck', 'off');
+options = optimoptions('fmincon', 'Display','off','Algorithm','sqp',...
+    'GradObj','on', 'TolFun', 1e-16, 'MaxIter', 4e3, 'MaxFunEvals', 1e4,...
+    'DerivativeCheck', 'off');
 tic
 [z, fval] = fmincon(F, z0, A, b, [], [], [], [], [], options);
 time = toc;

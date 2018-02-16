@@ -8,6 +8,10 @@ function [p_true, X] = sig_shifter(d, n, x_true, pmf_type)
 %output: 
 %       p_true: the true distribution of the shifts
 %       X: the clean shifted observations of the signal
+%
+%February 2018
+%paper: 
+%code:
 
 assert((strcmp(pmf_type,'nonuniform')) | (strcmp(pmf_type,'uniform')), ...
     'Wrong pmf type! The choices for pmf_type are 1) uniform, 2) nonuniform')

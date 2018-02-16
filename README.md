@@ -22,4 +22,3 @@ User Manual:
 - Run example.m for a quick example
 - All functions are included in the "functions" folder
 - The experiments performed in the paper are included in the "experiments" folder
-- The obtained results used to plot both figures in the paper are provided in "results" folder

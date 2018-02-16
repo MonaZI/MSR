@@ -1,3 +1,9 @@
+% MSR with non-uniform shift pmf and discrete-valued signal
+%
+%February 2018
+%paper: 
+%code:
+
 clear all
 close all
 clc
@@ -8,7 +14,7 @@ clc
 % list of parameters
 % signal and observations
 c = 4; % the number of possible symbols
-d = 11;sort([[11:10:101],[15:10:95]],'ascend');
+d = sort([[11:10:101],[15:10:95]],'ascend');
 n = 1e5;
 sigma = 0;
 pmf_type = 'nonuniform';
@@ -40,9 +46,9 @@ for i = 1:length(d)
     x_true = randi(c,[d(i),1])-1;
     
     % generating the shifts based on the distribution
-    [p_true, X] = sig_shifter(d, n, x_true, pmf_type);
+    [p_true, X] = sig_shifter(d(i), n, x_true, pmf_type);
     
-    for m = 7:1:d(i)
+    for m = 2:1:d(i)
         [mu_est, C_est, T_est] = generate_invariants(X, m, sigma, T_gen);
         
         mse_x_epoch = zeros(num_repeats,1);
@@ -51,7 +57,7 @@ for i = 1:length(d)
         for iter = 1:num_repeats
             % bispectrum included in the objective
             [ x_est, p_est, fval_epoch(iter), ~ ] = ... 
-                nonuniform_p(d, mu_est, C_est, T_est, lambda, mode, c);
+                nonuniform_p(d(i), mu_est, C_est, T_est, lambda, mode, c);
             x_est = round(x_est);
             x_align = align_to_ref(x_est, x_true);
             p_align = align_to_ref(p_est, p_true);

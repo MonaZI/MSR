@@ -6,6 +6,10 @@ function [ cost ] = likelihood_func( x, p, obs, sigma )
 %   obs: the noisy maksed observations
 %output:
 %   cost: the negative log likelihood cost
+%
+%February 2018
+%paper: 
+%code:
 
 d = length(x);
 m = size(obs,1);

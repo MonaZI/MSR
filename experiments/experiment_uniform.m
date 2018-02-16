@@ -1,10 +1,16 @@
+% MSR with uniform shift pmf
+%
+%February 2018
+%paper: 
+%code:
+
 clear all
 close all
 clc
 
 % list of parameters
 % signal and observations
-d = 11;sort([[11:10:101],[15:10:95]],'ascend');
+d = sort([[11:10:101],[15:10:95]],'ascend');
 n = 1e5;
 sigma = 0;
 pmf_type = 'uniform';

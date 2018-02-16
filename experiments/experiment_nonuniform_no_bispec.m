@@ -1,13 +1,17 @@
+% MSR with non-uniform shift pmf when no bispectrum term included in the
+% objective
+%
+%February 2018
+%paper: 
+%code:
+
 clear all
 close all
 clc
 
-% delete(gcp('nocreate'))
-% parpool('local',16);
-
 % list of parameters
 % signal and observations
-d = 21;sort([[11:10:101],[15:10:95]],'ascend');
+d = sort([[11:10:101],[15:10:95]],'ascend');
 n = 1e5;
 sigma = 0;
 pmf_type = 'nonuniform';
@@ -32,12 +36,12 @@ end
 
 for i = 1:length(d)
     % generating a signal of length d
-    x_true = rand(d,1);
+    x_true = rand(d(i),1);
     
     % generating the shifts based on the distribution (which is uniform here)
-    [p_true, X] = sig_shifter(d, n, x_true, pmf_type);
+    [p_true, X] = sig_shifter(d(i), n, x_true, pmf_type);
     
-    for m = 16:1:d(i)
+    for m = 2:1:d(i)
         [mu_est, C_est, ~] = generate_invariants(X, m, sigma, T_gen);
         
         mse_x_epoch = zeros(num_repeats,1);
@@ -48,7 +52,7 @@ for i = 1:length(d)
         for iter = 1:num_repeats 
             % bispectrum not included in the objective
             [ x_est, p_est, fval_epoch(iter), ~ ] = ... 
-                nonuniform_p_no_bispec(d, mu_est, C_est, lambda);
+                nonuniform_p_no_bispec(d(i), mu_est, C_est, lambda);
             x_align = align_to_ref(x_est, x_true);
             p_align = align_to_ref(p_est, p_true);
             mse_x_epoch(iter) = (norm(x_align-x_true,'fro'))^2;

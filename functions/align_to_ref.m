@@ -5,6 +5,10 @@ function aligned_sig = align_to_ref(x, x_ref)
 %       x_ref: the reference signal
 %output:
 %       aligned_sig: aligned signal
+%
+%February 2018
+%paper: 
+%code:
 
 x_fft = fft(x);
 x_ref_fft = fft(x_ref);

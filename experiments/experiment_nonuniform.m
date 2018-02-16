@@ -1,10 +1,16 @@
+% MSR with non-uniform shift pmf
+%
+%February 2018
+%paper: 
+%code:
+
 clear all
 close all
 clc
 
 % list of parameters
 % signal and observations
-d = 21;sort([[11:10:101],[15:10:95]],'ascend');
+d = sort([[11:10:101],[15:10:95]],'ascend');
 n = 1e5;
 sigma = 0;
 pmf_type = 'nonuniform';
@@ -31,12 +37,12 @@ end
 
 for i = 1:length(d)
     % generating a signal of length d
-    x_true = rand(d,1);
+    x_true = rand(d(i),1);
     
     % generating the shifts based on the distribution (which is uniform here)
     [p_true, X] = sig_shifter(d(i), n, x_true, pmf_type);
     
-    for m = 15:1:d(i)
+    for m = 2:1:d(i)
         [mu_est, C_est, T_est] = generate_invariants(X, m, sigma, T_gen);
         
         mse_x_epoch = zeros(num_repeats,1);
@@ -46,7 +52,7 @@ for i = 1:length(d)
         % use parfor to run the iterations in parallel
         for iter = 1:num_repeats 
             [ x_est, p_est, fval_epoch(iter), ~ ] = ...
-                nonuniform_p(d, mu_est, C_est, T_est, lambda, mode);
+                nonuniform_p(d(i), mu_est, C_est, T_est, lambda, mode);
             x_align = align_to_ref(x_est, x_true);
             p_align = align_to_ref(p_est, p_true);
             mse_x_epoch(iter) = (norm(x_align-x_true,'fro'))^2;

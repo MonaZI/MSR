@@ -12,6 +12,14 @@ function [ x_est, fval, time ] = uniform_p(d, mu_est, C_est, T_est, lambda)
 %       x_est: estimated signal
 %       fval: value of the objective function at the final point
 %       time: amount of required time for the computations
+%
+% ! Note that based on the MATLAB version, the options set in the 
+% "optimoptions" might have different names. We used MATLAB R2015b.
+%
+%February 2018
+%paper: 
+%code
+
 
 if ~exist('lambda','var') || isempty(lambda)
     lambda = ones(3,1);
@@ -27,8 +35,9 @@ z0 = xinit;
 
 % Defining the optimization problem
 F = @(z)objfun_unif(z, mu_est, C_est, T_est, lambda_mu, lambda_C, lambda_T);
-% options = optimoptions('fmincon', 'Display','off','Algorithm','sqp', 'SpecifyObjectiveGradient',true, 'FunctionTolerance', 1e-16, 'StepTolerance', 1e-15, 'MaxIterations', 4000, 'CheckGradient', false);
-options = optimoptions('fmincon', 'Display','off','Algorithm','sqp', 'GradObj','on', 'TolFun', 1e-16, 'MaxIter', 4000, 'MaxFunEvals', 10000, 'DerivativeCheck', 'off');
+options = optimoptions('fmincon', 'Display','off','Algorithm','sqp',...
+    'GradObj','on', 'TolFun', 1e-16, 'MaxIter', 4e3, 'MaxFunEvals', 1e4,...
+    'DerivativeCheck', 'off');
 tic
 [z, fval] = fmincon(F, z0, [], [], [], [], [], [], [], options);
 time = toc;

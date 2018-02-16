@@ -1,4 +1,9 @@
-% jobscript comparing our alg with covariance with EM
+% Comparing our approach in solving MSR with EM
+%
+%February 2018
+%paper: 
+%code:
+
 clear all
 close all
 clc
@@ -21,7 +26,7 @@ T_gen = 0;
 tol = 1e-5;
 max_iter = 5e5;
 
-num_repeats = 50;
+num_repeats = 1;
 
 % initialization
 mse_x_EM = zeros(length(sigma),1);
@@ -68,13 +73,16 @@ for sigma_ind = 1:length(sigma)
         fprintf(['iteration = ',num2str(iter),'\n'])
         
         % generaing the invariants
+        tic
         [mu_est, C_est, T_est] = generate_invariants(X, m, sigma(sigma_ind), T_gen);
+        time_cov_epoch(iter) = toc;
         
         % our approach
         fprintf('Our approach \n')
-        [ x_est, p_est, fval_cov(iter), time_cov_epoch(iter) ] = ...
+        [ x_est, p_est, fval_cov(iter), time ] = ...
             nonuniform_p_no_bispec(d, mu_est, C_est, lambda);
         
+        time_cov_epoch(iter) = time_cov_epoch(iter) + time;
         x_align = align_to_ref(x_est, x_true);
         p_align = align_to_ref(p_est, p_true);
         mse_x_epoch(iter) = (norm(x_align-x_true,'fro'))^2;

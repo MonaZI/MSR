@@ -9,6 +9,13 @@ function [mu, C_denoised, T_denoised] = generate_invariants(X, m, sigma, bispec_
 %   mu: the estimated mean
 %   C: the estimated correlation
 %   T: the estimated 3rd order correlation
+%
+% Note that this function requires tensorlab package,
+% https://www.tensorlab.net/
+%
+%February 2018
+%paper: 
+%code:
 
 n = size(X, 2);
 
@@ -20,30 +27,25 @@ X = X + sigma * randn(size(X));
 mu = mean(X, 2);
 C = 1/n * (X*X');
 T = zeros(m, m, m);
-tic;
 if bispec_ind == 1
-   U = {X, X, X};
-   % using built-in functions in tensorlab package
-   T = 1/n * cpdgen(U);    
+    if m <= 79
+        U = {X, X, X};
+        % using built-in functions in tensorlab package
+        T = 1/n * cpdgen(U);
+    else
+        parfor i = 1:m
+            for j = 1:m
+                for k = 1:m
+                    T(i, j, k) = 1/n * sum((X(i, :).*X(j, :).*X(k, :)));
+                end;
+            end;
+        end;
+        
+    end
 end
-t = toc;
-
-% T can be constructed using the following for loop, but it is much slower 
-% compared to the above approach
-% tic
-% if bispec_ind == 1
-%     parfor i = 1:m
-%         for j = 1:m
-%             for k = 1:m
-%                 T(i, j, k) = 1/n * sum((X(i, :).*X(j, :).*X(k, :)));
-%             end;
-%         end;
-%     end;
-% end
-% t2 = toc;
 
 % denoising the invariants
-if sigma ==0 
+if sigma ==0
     C_denoised = C;
     T_denoised = T;
 else

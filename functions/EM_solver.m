@@ -11,6 +11,10 @@ function [x,p,time_cost] = EM_solver(obs,d,sigma,tol,max_iter)
 %   x: estimated signal
 %   p: estimated shift pmf
 %   time_cost: EM computation time
+%
+%February 2018
+%paper: 
+%code:
 
 if ~exist('max_iter','var') || isempty(max_iter)
     max_iter = 5e5;
