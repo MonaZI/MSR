@@ -13,7 +13,7 @@ The latest version of the paper submitted to ArXiv,
 
 Paper: 
 
-Code:
+Code: https://github.com/MonaZI/MSR
 
 User Manual:
 -------------------------------------------------------
