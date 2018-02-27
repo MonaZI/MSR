@@ -10,8 +10,8 @@ function [C_denoised,T_denoised] = C_T_denoiser(mean_sig, C, T, sigma)
 %       T_denoised: denoised 3rd order invariant
 %
 %February 2018
-%paper: 
-%code:
+%paper: http://arxiv.org/abs/1802.08950
+%code: https://github.com/MonaZI/MSR
 
 m = size(C,1);
 C_denoised = C - (sigma^2) * eye(m);
