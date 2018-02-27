@@ -11,7 +11,7 @@ function [p_true, X] = sig_shifter(d, n, x_true, pmf_type)
 %
 %February 2018
 %paper: http://arxiv.org/abs/1802.08950
-%code:
+%code: https://github.com/MonaZI/MSR
 
 assert((strcmp(pmf_type,'nonuniform')) | (strcmp(pmf_type,'uniform')), ...
     'Wrong pmf type! The choices for pmf_type are 1) uniform, 2) nonuniform')
