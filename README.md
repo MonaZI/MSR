@@ -11,7 +11,7 @@ by: Mona Zehni, Minh N. Do, Zhizhen Zhao
 
 The latest version of the paper submitted to ArXiv,
 
-Paper: 
+Paper: https://arxiv.org/abs/1802.08950
 
 Code: https://github.com/MonaZI/MSR
 
