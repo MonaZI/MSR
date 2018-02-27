@@ -18,7 +18,7 @@ function [ x_est, fval, time ] = uniform_p(d, mu_est, C_est, T_est, lambda)
 %
 %February 2018
 %paper: http://arxiv.org/abs/1802.08950
-%code
+%code: https://github.com/MonaZI/MSR
 
 
 if ~exist('lambda','var') || isempty(lambda)
