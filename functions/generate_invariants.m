@@ -14,7 +14,7 @@ function [mu, C_denoised, T_denoised] = generate_invariants(X, m, sigma, bispec_
 % https://www.tensorlab.net/
 %
 %February 2018
-%paper: 
+%paper: http://arxiv.org/abs/1802.08950
 %code:
 
 n = size(X, 2);
