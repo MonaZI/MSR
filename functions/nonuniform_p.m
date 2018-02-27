@@ -23,7 +23,7 @@ function [ rec_sig, p_est, fval, time ] = nonuniform_p ...
 %
 %February 2018
 %paper: http://arxiv.org/abs/1802.08950
-%code
+%code: https://github.com/MonaZI/MSR
 
 if ~exist('mode','var') || isempty(mode)
     mode = 'random';
