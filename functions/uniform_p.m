@@ -17,7 +17,7 @@ function [ x_est, fval, time ] = uniform_p(d, mu_est, C_est, T_est, lambda)
 % "optimoptions" might have different names. We used MATLAB R2015b.
 %
 %February 2018
-%paper: 
+%paper: http://arxiv.org/abs/1802.08950
 %code
 
 
