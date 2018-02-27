@@ -9,7 +9,7 @@ function [ cost ] = likelihood_func( x, p, obs, sigma )
 %
 %February 2018
 %paper: http://arxiv.org/abs/1802.08950
-%code:
+%code: https://github.com/MonaZI/MSR
 
 d = length(x);
 m = size(obs,1);
