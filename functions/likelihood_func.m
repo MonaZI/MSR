@@ -8,7 +8,7 @@ function [ cost ] = likelihood_func( x, p, obs, sigma )
 %   cost: the negative log likelihood cost
 %
 %February 2018
-%paper: 
+%paper: http://arxiv.org/abs/1802.08950
 %code:
 
 d = length(x);
