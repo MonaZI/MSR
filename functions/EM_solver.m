@@ -13,8 +13,8 @@ function [x,p,time_cost] = EM_solver(obs,d,sigma,tol,max_iter)
 %   time_cost: EM computation time
 %
 %February 2018
-%paper: 
-%code:
+%paper: http://arxiv.org/abs/1802.08950
+%code: https://github.com/MonaZI/MSR
 
 if ~exist('max_iter','var') || isempty(max_iter)
     max_iter = 5e5;
