@@ -22,7 +22,7 @@ function [ rec_sig, p_est, fval, time ] = nonuniform_p ...
 % "optimoptions" might have different names. We used MATLAB R2015b.
 %
 %February 2018
-%paper: 
+%paper: http://arxiv.org/abs/1802.08950
 %code
 
 if ~exist('mode','var') || isempty(mode)
