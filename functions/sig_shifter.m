@@ -10,7 +10,7 @@ function [p_true, X] = sig_shifter(d, n, x_true, pmf_type)
 %       X: the clean shifted observations of the signal
 %
 %February 2018
-%paper: 
+%paper: http://arxiv.org/abs/1802.08950
 %code:
 
 assert((strcmp(pmf_type,'nonuniform')) | (strcmp(pmf_type,'uniform')), ...
