@@ -2,7 +2,7 @@
 % objective
 %
 %February 2018
-%paper: 
+%paper: http://arxiv.org/abs/1802.08950
 %code:
 
 clear all
