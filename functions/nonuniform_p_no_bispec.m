@@ -19,7 +19,7 @@ function [ rec_sig, p_est, fval, time ] = nonuniform_p_no_bispec(d, mu_est, C_es
 %
 %February 2018
 %paper: http://arxiv.org/abs/1802.08950
-%code
+%code: https://github.com/MonaZI/MSR
 
 if ~exist('lambda','var') || isempty(lambda)
     lambda = ones(2,1);
