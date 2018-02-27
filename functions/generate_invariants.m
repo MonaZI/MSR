@@ -15,7 +15,7 @@ function [mu, C_denoised, T_denoised] = generate_invariants(X, m, sigma, bispec_
 %
 %February 2018
 %paper: http://arxiv.org/abs/1802.08950
-%code:
+%code: https://github.com/MonaZI/MSR
 
 n = size(X, 2);
 
