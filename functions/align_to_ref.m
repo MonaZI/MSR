@@ -7,8 +7,8 @@ function aligned_sig = align_to_ref(x, x_ref)
 %       aligned_sig: aligned signal
 %
 %February 2018
-%paper: 
-%code:
+%paper: http://arxiv.org/abs/1802.08950
+%code: https://github.com/MonaZI/MSR
 
 x_fft = fft(x);
 x_ref_fft = fft(x_ref);
