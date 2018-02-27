@@ -1,8 +1,8 @@
 % Quick example
 %
 %February 2018
-%paper: 
-%code:
+%paper: https://arxiv.org/abs/1802.08950
+%code: https://github.com/MonaZI/MSR
 
 clear all
 close all
