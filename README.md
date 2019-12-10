@@ -4,8 +4,7 @@ Multi-Segment Reconstruction Using Invariant Features
 
 MATLAB implementations for the following paper,
 
-"Multi-Segment Reconstruction Using Invariant Features",
-to be published in ICASSP 2018.
+"Multi-Segment Reconstruction Using Invariant Features", published in ICASSP 2018.
 
 by: Mona Zehni, Minh N. Do, Zhizhen Zhao
 
